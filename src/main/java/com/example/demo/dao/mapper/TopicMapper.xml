@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.TopicMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Topics" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="BIGINT" />
+        <result column="img" property="img" jdbcType="VARCHAR" />
+        <result column="order" property="order" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="is_recommend" property="isRecommend" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="ResultMapWithBLOBs" type="com.example.demo.entity.Topics" extends="BaseResultMap" >
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, title, type, url, user_id userId, img, `order`, status, create_time createTime,is_delete isDelete,is_recommend isRecommend
+    </sql>
+    <sql id="T_Base_Column_List" >
+        t.id, t.title, t.type, t.url, t.user_id userId, t.img, t.order, t.status, t.create_time createTime,t.is_delete isDelete,t.is_recommend isRecommend
+    </sql>
+
+    <sql id="T_Blob_Column_List" >
+        content
+    </sql>
+    <sql id="Blob_Column_List" >
+        content
+    </sql>
+
+    <select id="selectByParam" resultType="hashmap" parameterType="com.example.demo.view.TopicsParam">
+        select
+        <include refid="T_Base_Column_List" />
+        ,
+        <include refid="T_Blob_Column_List" />
+        ,
+        u.name nickName
+
+        from t_topics t
+        LEFT JOIN u_user u on u.id =  t.user_id
+       where
+            1=1 and u.is_terminate != 1 and t.is_delete !=1
+            <if test="tParam.status != null">
+                and t.status=#{tParam.status,jdbcType=TINYINT}
+            </if>
+            <if test="tParam.isRecommend != null">
+            and t.is_recommend=#{tParam.isRecommend,jdbcType=TINYINT}
+            </if>
+            <if test="tParam.type != null">
+                and t.type=#{type,jdbcType=TINYINT}
+            </if>
+            <if test="tParam.bTime != null and tParam.bTime !=''">
+                and t.create_time>#{tParam.bTime,jdbcType=VARCHAR}
+            </if>
+            <if test="tParam.eTime !=null and tParam.eTime!=''">
+                and t.create_time &lt; (CONCAT(#{tParam.eTime,jdbcType=VARCHAR},' 23:59:59'))
+            </if>
+            <if test="tParam.param != null and tParam.param!=''">
+                and (t.title like CONCAT('%',#{tParam.param,jdbcType=VARCHAR},'%') or
+                u.name like CONCAT('%',#{tParam.param,jdbcType=VARCHAR},'%') OR
+                t.id = #{tParam.param,jdbcType=VARCHAR} or
+                t.content like CONCAT('%',#{tParam.param,jdbcType=VARCHAR},'%') OR
+                t.url like CONCAT('%',#{tParam.param,jdbcType=VARCHAR},'%'))
+            </if>
+            order by t.order asc,t.create_time desc
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from t_topics
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.demo.entity.Topics" >
+        insert into t_topics
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="url != null" >
+                url,
+            </if>
+            <if test="userId != null" >
+                user_id,
+            </if>
+            <if test="img != null" >
+                img,
+            </if>
+            <if test="order != null" >
+                `order`,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="content != null" >
+                content,
+            </if>
+            <if test="isDelete != null" >
+                is_delete,
+            </if>
+            <if test="isRecommend != null" >
+                is_recommend,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="title != null" >
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=TINYINT},
+            </if>
+            <if test="url != null" >
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null" >
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="img != null" >
+                #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="order != null" >
+                #{order,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null" >
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDelete != null" >
+                #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="isRecommend != null" >
+                #{isRecommend,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.Topics" >
+        update t_topics
+        <set >
+            <if test="title != null" >
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="url != null" >
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null" >
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="order != null" >
+                `order` = #{order,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="content != null" >
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDelete != null" >
+                is_delete = #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="isRecommend != null" >
+                is_recommend = #{isRecommend,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

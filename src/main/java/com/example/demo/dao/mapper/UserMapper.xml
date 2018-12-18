@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.User">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="score" property="score" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+        <result column="is_terminate" property="isTerminate" jdbcType="TINYINT"/>
+        <result column="unique_code" property="uniqueCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,`name`,mobile,password,score,`type`,create_time createTime,last_login_time lastLoginTime,is_terminate isTerminate,unique_code uniqueCode
+    </sql>
+
+    <insert id="insertByEntity" parameterType="com.example.demo.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into u_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time,
+            </if>
+            <if test="uniqueCode != null">
+                unique_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginTime != null">
+                #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uniqueCode != null">
+                #{uniqueCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+
+
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from u_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.User">
+        update u_user
+        <set>
+            <if test="name != null">
+               `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile =#{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password= #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                `type`= #{type,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                score = score + #{score,jdbcType=INTEGER},
+            </if>
+            <if test="lastLoginTime != null">
+               last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isTerminate != null">
+                is_terminate = #{isTerminate,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectUsers" parameterType="com.example.demo.view.UserParam" resultMap="BaseResultMap">
+        select * from u_user
+        where
+        1=1
+        <if test="param.type != null ">
+            and `type`=#{param.type,jdbcType=INTEGER}
+        </if>
+            <if test="param.param != null and param.param != ''">
+                and (mobile = #{param.param,jdbcType=VARCHAR} or
+                `name` like CONCAT('%',#{param.param,jdbcType=VARCHAR},'%') OR
+                id = #{param.param,jdbcType=VARCHAR})
+            </if>
+      order by create_time desc
+    </select>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.TopicReplyMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.TopicReply" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_id" property="userId" jdbcType="BIGINT" />
+        <result column="topic_id" property="topicId" jdbcType="BIGINT" />
+        <result column="topic_reply_id" property="topicReplyId" jdbcType="BIGINT" />
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, user_id userId, topic_id topicId, topic_reply_id topicReplyId, is_delete isDelete, create_time createTime
+    </sql>
+    <sql id="T_Base_Column_List" >
+        id, user_id userId, topic_id topicId, topic_reply_id topicReplyId, is_delete isDelete, create_time createTime
+    </sql>
+    <resultMap id="ResultMapWithBLOBs" type="com.example.demo.entity.TopicReply" extends="BaseResultMap" >
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="com.example.demo.entity.TopicReply" >
+        insert into t_topic_reply
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                user_id,
+            </if>
+            <if test="topicId != null" >
+                topic_id,
+            </if>
+            <if test="topicReplyId != null" >
+                topic_reply_id,
+            </if>
+            <if test="content != null" >
+                content,
+            </if>
+            <if test="isDelete != null" >
+                is_delete,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="topicId != null" >
+                #{topicId,jdbcType=BIGINT},
+            </if>
+            <if test="topicReplyId != null" >
+                #{topicReplyId,jdbcType=BIGINT},
+            </if>
+            <if test="content != null" >
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDelete != null" >
+                #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from t_topic_reply
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <update id="updateById">
+        update t_topic_reply set is_delete = 1 WHERE id=#{topicsReplyId,jdbcType=BIGINT}
+    </update>
+    <select id="selectByPatam" parameterType="com.example.demo.entity.TopicReply" resultType="hashmap">
+        SELECT
+        <include refid="T_Base_Column_List" />
+         ,u.name nickName
+        FROM t_topic_reply t
+        LEFT JOIN u_user u on u.id = t.user_id
+        WHERE
+        1=1 and isDelete !=1
+        <if test="tp.topicId !=null tp.topicId！=''">
+            t.topic_id=#{tp.topicId,jdbcType=BIGINT}
+        </if>
+    </select>
+</mapper>
