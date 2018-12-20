@@ -19,7 +19,6 @@ public class TaskService {
     @Scheduled(fixedRate = 60000*5)
     @Transactional(rollbackFor = {Exception.class})
     public void TimedTask() throws MyException, IOException,Exception {
-
         System.out.println("timed task");
     }
 }
