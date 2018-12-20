@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by pwx on 2016/9/29.
+ * Created by zjl
  */
 @RestController
 @RequestMapping({"/common"})
