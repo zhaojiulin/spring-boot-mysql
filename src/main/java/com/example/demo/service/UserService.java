@@ -108,14 +108,12 @@ public class UserService  {
 
 
     public User getUserById(Long id){
-        User user= this.userMapper.selectByPrimaryKey(id);
-        return user;
+        return this.userMapper.selectByPrimaryKey(id);
 
     }
 
     public User getUserByMobile(String mobile){
-        User user= this.userMapper.selectByMobile(mobile);
-        return user;
+        return this.userMapper.selectByMobile(mobile);
 
     }
 

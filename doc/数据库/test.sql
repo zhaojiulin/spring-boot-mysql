@@ -81,3 +81,19 @@ CREATE TABLE `u_user` (
   `unique_code` varchar(255) DEFAULT NULL COMMENT ' 专属码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `address_info`;
+CREATE TABLE `address_info` (
+  `id` varchar(100) NOT NULL COMMENT '地址的id用来区分地址',
+  `user_id` varchar(255) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL COMMENT '是否为默认地址,1为默认地址,0为非默认地址',
+  `receiver_name` varchar(11) DEFAULT NULL COMMENT '接受者姓名',
+  `telphone` varchar(11) DEFAULT NULL COMMENT '联系电话',
+  `country` varchar(20) DEFAULT NULL,
+  `province` varchar(20) DEFAULT NULL,
+  `city` varchar(20) DEFAULT NULL,
+  `area` varchar(20) DEFAULT NULL,
+  `address` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.schedule;
 
 import com.example.demo.util.MyException;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -7,13 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 
 /**
- * TaskService
- *
+ * Scheduler
+ * 定时任务
  * @author zjl
  * @date 2018/12/20
- * Scheduled执行定时任务与cron表达式 自己网上搜
+ * Scheduled执行定时任务与cron表达式
  */
-public class TaskService {
+public class Scheduler {
 
 
     @Scheduled(fixedRate = 60000*5)

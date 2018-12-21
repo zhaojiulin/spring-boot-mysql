@@ -43,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public Object login(@RequestBody User user) throws Exception {
-        User u = this.userService.login(user);
+        User u = userService.login(user);
         return new Result().Add("user", u).Success();
     }
 
@@ -58,7 +58,7 @@ public class UserController {
     @ResponseBody
     public Object getUserById(@PathVariable Long id) throws Exception {
         Map map = new HashMap<>();
-        User user = this.userService.getUserById(id);
+        User user = userService.getUserById(id);
         map.put("user", user);
         return map;
     }
@@ -73,7 +73,7 @@ public class UserController {
     @RequestMapping(value = "/getUserByMobile")
     @ResponseBody
     public Object getUserByMobile(String mobile) throws Exception {
-        User user = this.userService.getUserByMobile(mobile);
+        User user = userService.getUserByMobile(mobile);
         return user;
     }
 
